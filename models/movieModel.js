@@ -23,6 +23,10 @@ const Movie = db.define('movie', {
     type: Sequelize.STRING,
     allowNull: true,
   },
+  picture: { 
+    type: Sequelize.STRING, 
+    allowNull: true 
+  },
 });
 
 
