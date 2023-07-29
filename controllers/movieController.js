@@ -10,7 +10,7 @@ exports.createMovie = async (req, res) => {
     const { title, year, type, actor, synopsis, picture} = req.body;
     console.log(title, year, type, actor, synopsis, picture);
     // Créer un nouveau film dans la base de données
-    const newMovie = await Movie.create({ title, year, type, actor, synopsis });
+    const newMovie = await Movie.create({ title, year, type, actor, synopsis, picture });
 
     res.status(201).json(newMovie);
   } catch (error) {
