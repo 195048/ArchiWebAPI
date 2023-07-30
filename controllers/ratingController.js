@@ -17,7 +17,24 @@ exports.createRating = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
-
+exports.getRatingByEmailAndTitle = async (req, res) => {
+  try {
+    const email = req.params.email;
+    const title = req.params.title;
+    const rating = await Rating.findOne({
+      where: {
+        email: email,
+        title: title,
+      },
+    });
+    if (!rating) {
+      return res.status(404).json({ error: 'Rating not found' });
+    }
+    res.status(200).json(rating);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 // Fonction pour obtenir la liste de tous les ratings
 exports.getRatings = async (req, res) => {
   try {
