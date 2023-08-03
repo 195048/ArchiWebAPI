@@ -126,7 +126,7 @@ exports.deleteRating = async (req, res) => {
     const ratingId = req.params.ratingId;
 
     // Supprimer le rating de la base de données
-    await Rating.destroy({ where: { ratingId: ratingId } });
+    await Rating.destroy({ where: { rating_id: ratingId } });
 
     res.status(200).json({ message: 'Rating deleted successfully!' });
   } catch (error) {
