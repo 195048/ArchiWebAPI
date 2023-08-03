@@ -47,6 +47,8 @@ router.delete('/ratings/:ratingId', isAuthorized, ratingController.deleteRating)
 // New routes to get ratings by user ID and movie ID
 router.get('/ratings/user/:email', isAuthorized, ratingController.getRatingsByUser);
 router.get('/ratings/movie/:title', isAuthorized, ratingController.getRatingsByMovie);
+router.get('/ratings/movie/:email/:title', isAuthorized, ratingController.getRatingByEmailAndTitle);
+router.put('/ratings/movie/:email/:title', isAuthorized, ratingController.updateRatingByEmailAndTitle);
 
 
 module.exports = router;

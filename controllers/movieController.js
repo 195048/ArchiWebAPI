@@ -7,10 +7,10 @@ const Movie = db.Movie;
 exports.createMovie = async (req, res) => {
   try {
     
-    const { title, year, type, actor, synopsis } = req.body;
-    console.log(title, year, type, actor, synopsis);
+    const { title, year, type, actor, synopsis, picture} = req.body;
+    console.log(title, year, type, actor, synopsis, picture);
     // Créer un nouveau film dans la base de données
-    const newMovie = await Movie.create({ title, year, type, actor, synopsis });
+    const newMovie = await Movie.create({ title, year, type, actor, synopsis, picture });
 
     res.status(201).json(newMovie);
   } catch (error) {
@@ -46,7 +46,7 @@ exports.getMovieById = async (req, res) => {
 exports.updateMovie = async (req, res) => {
   try {
     const movieId = req.params.title;
-    const { title, year, type, actor, synopsis } = req.body;
+    const { title, year, type, actor, synopsis, picture } = req.body;
 
     // Vérifier si le film existe dans la base de données
     const movieToUpdate = await Movie.findByPk(movieId);
@@ -60,6 +60,7 @@ exports.updateMovie = async (req, res) => {
     movieToUpdate.type = type;
     movieToUpdate.actor = actor;
     movieToUpdate.synopsis = synopsis;
+    movieToUpdate.picture = picture;
 
     // Sauvegarder les modifications dans la base de données
     await movieToUpdate.save();

@@ -17,6 +17,57 @@ exports.createRating = async (req, res) => {
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+exports.getRatingByEmailAndTitle = async (req, res) => {
+  try {
+    const email = req.params.email;
+    const title = req.params.title;
+    const rating = await Rating.findOne({
+      where: {
+        email: email,
+        title: title,
+      },
+    });
+    if (!rating) {
+      return res.status(404).json({ error: 'Rating not found' });
+    }
+    res.status(200).json(rating);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+exports.updateRatingByEmailAndTitle = async (req, res) => {
+  try {
+    const email = req.params.email;
+    const title = req.params.title;
+
+    // Assuming you have a Rating model defined with Sequelize
+    const rating = await Rating.findOne({
+      where: {
+        email: email,
+        title: title,
+      },
+    });
+
+    if (!rating) {
+      return res.status(404).json({ error: 'Rating not found' });
+    }
+
+    // Assuming you have the updated rating data in the request body
+    const updatedRatingData = req.body;
+
+    // Update the rating with the new data
+    rating.score = updatedRatingData.score;
+    rating.review = updatedRatingData.review;
+
+    // Save the updated rating to the database
+    await rating.save();
+
+    res.status(200).json(rating);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
 
 // Fonction pour obtenir la liste de tous les ratings
 exports.getRatings = async (req, res) => {
