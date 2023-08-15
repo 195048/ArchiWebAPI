@@ -1,0 +1,529 @@
+components:
+  schemas:
+    Login:
+      properties:
+        password:
+          description: Password for the user
+          type: string
+        username:
+          description: Username of the user
+          type: string
+        adress :
+          description: Adress of the user
+          type: string
+        picture:
+          description: Picture of the user
+          type: string
+      required:
+      - username
+      - password
+      type: object
+    Movie:
+      properties:
+        actor:
+          description: Acteur(s) principaux du film
+          type: string
+        picture:
+          description: Affiche du film
+          type: string
+        synopsis:
+          description: Synopsis du film
+          type: string
+        title:
+          description: Titre du film
+          type: string
+        type:
+          description: Genre du film
+          type: string
+        year:
+          description: "Ann\xE9e de sortie du film"
+          type: integer
+      required:
+      - title
+      - type
+      - year
+      type: object
+    Rating:
+      properties:
+        review:
+          description: Comment or review provided by the user
+          type: string
+        title:
+          description: Title of the movie that was rated
+          type: string
+        score:
+          description: Rating value
+          type: integer
+        email:
+          description: ID of the user who provided the rating
+          type: string
+      required:
+      - userId
+      - movieTitle
+      - rating
+      type: object
+    User:
+      properties:
+        email:
+          description: Email address of the user
+          type: string
+        password:
+          description: Password for the user
+          type: string
+        adress:
+          description: Adress of the user
+          type: string
+        picture:
+          description: Picture of the user
+          type: string
+      required:
+      - email
+      - password
+      type: object
+info:
+  description: API for rating movies, managing users, and their ratings.
+  title: Movie Rating API
+  version: 1.0.0
+openapi: 3.0.0
+paths:
+  /ratings:
+    get:
+      description: ratingsController.getAllRatings
+      operationId: getAllRatings
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Rating'
+                type: array
+          description: Successful operation
+      summary: "R\xE9cup\xE9rer toutes les notes"
+      tags:
+      - Ratings
+    post:
+      description: ratingsController.createRating
+      operationId: createRating
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rating'
+        description: Rating details
+        required: true
+      responses:
+        '201':
+          description: Rating created
+      summary: Ajouter une nouvelle note
+      tags:
+      - Ratings
+  /ratings/movie/{email}/{title}:
+    get:
+      description: ratingsController.getUserRatingForMovie
+      operationId: getUserRatingForMovie
+      parameters:
+      - description: Email of the user
+        in: path
+        name: email
+        required: true
+        schema:
+          type: string
+      - description: Title of the movie
+        in: path
+        name: title
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rating'
+          description: Successful operation
+      summary: "R\xE9cup\xE9rer la note d'un utilisateur pour un film"
+      tags:
+      - Ratings
+    put:
+      description: ratingsController.updateUserRatingForMovie
+      operationId: updateUserRatingForMovie
+      parameters:
+      - description: Email of the user
+        in: path
+        name: email
+        required: true
+        schema:
+          type: string
+      - description: Title of the movie
+        in: path
+        name: title
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rating'
+        description: Updated rating details
+        required: true
+      responses:
+        '200':
+          description: Rating updated
+      summary: "Mettre \xE0 jour la note d'un utilisateur pour un film"
+      tags:
+      - Ratings
+  /ratings/movie/{title}:
+    get:
+      description: ratingsController.getRatingsByMovie
+      operationId: getRatingsByMovie
+      parameters:
+      - description: Title of the movie for which ratings are to be fetched
+        in: path
+        name: title
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Rating'
+                type: array
+          description: Successful operation
+      summary: "R\xE9cup\xE9rer les notes pour un film"
+      tags:
+      - Ratings
+  /ratings/user/{email}:
+    get:
+      description: ratingsController.getRatingsByUser
+      operationId: getRatingsByUser
+      parameters:
+      - description: Email of the user whose ratings are to be fetched
+        in: path
+        name: email
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Rating'
+                type: array
+          description: Successful operation
+      summary: "R\xE9cup\xE9rer les notes d'un utilisateur"
+      tags:
+      - Ratings
+  /ratings/{ratingId}:
+    delete:
+      description: ratingsController.deleteRating
+      operationId: deleteRating
+      parameters:
+      - description: ID of the rating that needs to be deleted
+        in: path
+        name: ratingId
+        required: true
+        schema:
+          type: string
+      responses:
+        '204':
+          description: Rating deleted
+        '404':
+          description: Rating not found
+      summary: Supprimer une note
+      tags:
+      - Ratings
+    get:
+      description: ratingsController.getRatingById
+      operationId: getRatingById
+      parameters:
+      - description: ID of the rating to retrieve
+        in: path
+        name: ratingId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Rating'
+          description: Successful operation
+        '404':
+          description: Rating not found
+      summary: "R\xE9cup\xE9rer une note par ID"
+      tags:
+      - Ratings
+    put:
+      description: ratingsController.updateRating
+      operationId: updateRating
+      parameters:
+      - description: ID of the rating that needs to be updated
+        in: path
+        name: ratingId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Rating'
+        description: Rating object that needs to be updated in the database
+        required: true
+      responses:
+        '204':
+          description: Rating updated
+        '400':
+          description: Invalid input
+        '404':
+          description: Rating not found
+      summary: "Mettre \xE0 jour une note"
+      tags:
+      - Ratings
+  /users:
+    get:
+      description: usersController.getAllUsers
+      operationId: getAllUsers
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/User'
+                type: array
+          description: Successful operation
+      summary: "R\xE9cup\xE9rer tous les utilisateurs"
+      tags:
+      - Users
+  /users/{userId}:
+    delete:
+      description: usersController.deleteUser
+      operationId: deleteUser
+      parameters:
+      - description: ID of the user to delete
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: User deleted
+      summary: Supprimer un utilisateur
+      tags:
+      - Users
+    get:
+      description: usersController.getUserById
+      operationId: getUserById
+      parameters:
+      - description: ID of the user to retrieve
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: Successful operation
+      summary: "R\xE9cup\xE9rer un utilisateur par ID"
+      tags:
+      - Users
+    put:
+      description: usersController.updateUser
+      operationId: updateUser
+      parameters:
+      - description: ID of the user to update
+        in: path
+        name: userId
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        description: Updated user object
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: User updated
+      summary: "Mettre \xE0 jour un utilisateur"
+      tags:
+      - Users
+  /users/register:
+    post:
+      description: usersController.createUser
+      operationId: createUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login' # Assuming that the registration uses the same schema as login; adjust if different
+        description: User registration details
+        required: true
+      responses:
+        '201':
+          description: User registered successfully
+        '400':
+          description: Invalid input
+        '409':
+          description: User already exists
+      summary: Inscription d'un utilisateur
+      tags:
+      - Users
+
+  /users/login:
+    post:
+      description: usersController.login
+      operationId: loginUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Login'
+        description: User login details
+        required: true
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: Authentication token
+        '400':
+          description: Invalid input
+        '401':
+          description: Authentication failed
+      summary: Connexion d'un utilisateur
+      tags:
+      - Users
+
+  /movies:
+    post:
+      description: moviesController.createMovie
+      operationId: createMovie
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Movie'
+        description: Movie object to be added to the database
+        required: true
+      responses:
+        '201':
+          description: Movie created successfully
+        '400':
+          description: Invalid input
+      summary: Ajouter un nouveau film
+      tags:
+      - Movies
+    get:
+      description: moviesController.getAllMovies
+      operationId: getAllMovies
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                items:
+                  $ref: '#/components/schemas/Movie'
+                type: array
+          description: Successful operation
+        '404':
+          description: Movies not found
+      summary: Récupérer tous les films
+      tags:
+      - Movies
+  /movies/{title}:
+    get:
+      description: moviesController.getMovieByTitle
+      operationId: getMovieByTitle
+      parameters:
+      - description: Title of the movie to retrieve
+        in: path
+        name: title
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+          description: Successful operation
+        '404':
+          description: Movie not found
+      summary: Récupérer un film par titre
+      tags:
+      - Movies
+    put:
+      description: moviesController.updateMovieByTitle
+      operationId: updateMovieByTitle
+      parameters:
+      - description: Title of the movie to be updated
+        in: path
+        name: title
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Movie'
+        description: Updated movie object
+        required: true
+      responses:
+        '200':
+          description: Movie updated successfully
+        '400':
+          description: Invalid input
+        '404':
+          description: Movie not found
+      summary: Mettre à jour un film par titre
+      tags:
+      - Movies
+    delete:
+      description: moviesController.deleteMovieByTitle
+      operationId: deleteMovieByTitle
+      parameters:
+      - description: Title of the movie to be deleted
+        in: path
+        name: title
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Movie deleted successfully
+        '404':
+          description: Movie not found
+      summary: Supprimer un film par titre
+      tags:
+      - Movies
+servers:
+- description: Local development server
+  url: http://localhost:3000/
